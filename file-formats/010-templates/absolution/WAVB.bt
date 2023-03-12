@@ -1,0 +1,41 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+enum EWaveBankMemoryLoadRTType
+{
+	WAVEBANKRT_RAM = 0,
+	WAVEBANKRT_COMPRESSEDRAM = 1,
+	WAVEBANKRT_STREAM = 2,
+	WAVEBANKRT_STREAMFROMMEMORY = 3
+};
+
+enum EWaveBankRTFormat
+{
+	WAVEBANKRT_FORMAT_DEFAULT = 0,
+	WAVEBANKRT_FORMAT_PCM = 1,
+	WAVEBANKRT_FORMAT_COMPRESSED = 2
+};
+
+typedef struct SWaveBankResourceData
+{
+	int m_nTracks;
+	EWaveBankMemoryLoadRTType m_eLoadType;
+	EWaveBankRTFormat m_eFormat;
+	int m_nIsPlaceholder;
+	int m_nIsNotDucking;
+	float m_fDuration;
+	unsigned int m_nChannels;
+	int m_nQuality;
+};
+
+SWaveBankResourceData waveBankResourceData;

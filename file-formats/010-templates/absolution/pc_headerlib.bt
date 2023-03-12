@@ -1,0 +1,202 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: pc_headerlib
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+unsigned int GetResourceIDOffsetCount(int referenceCount)
+{
+    local unsigned int pos = FTell();
+
+    if (referenceCount == 1)
+    {
+        return 0;
+    }
+
+    return referenceCount;
+}
+
+unsigned int GetReferenceCount(int referencesChunkCount)
+{
+    return referencesChunkCount & 0x7FFFFFFF;
+}
+
+typedef struct SResourceHeaderHeader
+{
+    char m_type[4];
+    unsigned int m_nReferencesChunkSize;
+    unsigned int m_nStatesChunkSize;
+    unsigned int m_nDataSize;
+    unsigned int m_nSystemMemoryRequirement;
+    unsigned int m_nVideoMemoryRequirement;
+};
+
+typedef struct SHeaderLibraryChunk
+{
+    unsigned int libraryIDLength;
+    unsigned int libraryIDOffset;
+    unsigned int nOffset;
+    char nFlags;
+    unsigned char __padding[3];
+    unsigned int localizationCategory;
+    unsigned int languagesStartOffset;
+    unsigned int languagesEndOffset;
+    unsigned int languagesLastOffset;
+    unsigned int statesStartOffset;
+    unsigned int statesEndOffset;
+    unsigned int statesLastOffset;
+    unsigned int resourceHeadersStartOffset;
+    unsigned int resourceHeadersEndOffset;
+    unsigned int resourceHeadersLastOffset;
+    unsigned int ridMappingIndicesStartOffset;
+    unsigned int ridMappingIndicesEndOffset;
+    unsigned int ridMappingIndicesLastOffset;
+    unsigned int ridMappingIDsStartOffset;
+    unsigned int ridMappingIDsEndOffset;
+    unsigned int ridMappingIDsLastOffset;
+};
+
+typedef struct ResourceHeader
+{
+    unsigned int resourceHeaderDataStartOffset;
+    unsigned int resourceHeaderDataEndOffset;
+    unsigned int resourceHeaderDataLastOffset;
+};
+
+typedef struct ResourceReferencesChunk
+{
+    int referenceCount <comment="Number of references">;
+    __uint64 runtimeResourceIDs[GetReferenceCount(referenceCount)];
+    unsigned char flags[GetReferenceCount(referenceCount)];
+};
+
+typedef struct ResourceHeaderData
+{
+    unsigned int resourceHeaderDataSize <bgcolor=cBlue>;
+    SResourceHeaderHeader resourceHeaderHeader <bgcolor=0x026CFC>;
+
+    if (resourceHeaderHeader.m_nReferencesChunkSize > 0)
+    {
+        ResourceReferencesChunk resourceReferencesChunk <bgcolor=cRed>;
+        unsigned char __padding[CalculatePadding(4)];
+    }
+};
+
+unsigned int CalculatePadding(unsigned int alignment)
+{
+    local unsigned int currentPosition = FTell();
+    local unsigned int misalign = currentPosition % alignment;
+
+	if (misalign != 0)
+	{
+	    return alignment - misalign;
+	}
+
+    return 0;
+}
+
+typedef struct ResourceID
+{
+    string resourceID;
+};
+
+typedef struct ChunkData
+{
+    unsigned int libraryIDLength;
+    string libraryID;
+    unsigned int languagesCount;
+    unsigned int laguageLength;
+    unsigned int languageOffset;
+    unsigned int languageLength2;
+    string language;
+    unsigned int resourceHeaderCount;
+    ResourceHeader resourceHeaderOffsets[resourceHeaderCount];
+    ResourceHeaderData resourceHeaderData[resourceHeaderCount] <optimize=false>;
+    unsigned char __padding[CalculatePadding(8)];
+    unsigned int ridMappingIndicesCount;
+    unsigned int ridMappingIndices[ridMappingIndicesCount];
+    unsigned char __padding2[CalculatePadding(8)];
+    unsigned int ridMappingIDCount;
+    __uint64 ridMappingIDs[ridMappingIDCount];
+};
+
+enum EEndian
+{
+    ENDIAN_BIG = 1,
+    ENDIAN_LITTLE = 0
+};
+
+string read_Flags(unsigned char flags)
+{
+    if (flags == 0)
+    {
+        return "Little endian";
+    }
+
+    return "Big endian";
+}
+
+typedef struct BinaryBulkDataHeader
+{
+    char magic[4];
+    unsigned char flags <read=read_Flags>;
+    unsigned char alignment;
+    unsigned char numberOfCustomDataSections;
+    unsigned char unused_byte;
+    unsigned char dataLength0;
+    unsigned char dataLength1;
+    unsigned char dataLength2;
+    unsigned char dataLength3;
+    int unused_dword;
+};
+
+typedef struct HeaderLibraryReferencesChunk
+{
+    unsigned int referenceCount <comment="Number of references">;
+    unsigned int flagOffset <comment="Offset of first flag">;
+    unsigned int firstResourceIDOffset <comment="Offset of first resource id">;
+    unsigned int flag <comment="Flag of first reference">;
+    unsigned int resourceIDOffsets[GetResourceIDOffsetCount(referenceCount)];
+    ResourceID resourceIDs[referenceCount] <optimize=false>;
+};
+
+typedef struct StringData
+{
+    unsigned int length;
+    unsigned int offset;
+};
+
+typedef struct ExternalResourceID
+{
+    unsigned int length;
+    string resourceID;
+};
+
+typedef struct SHeaderLibrary
+{
+    SResourceHeaderHeader resourceHeaderHeader <bgcolor=cBlue>;
+    HeaderLibraryReferencesChunk headerLibraryReferencesChunk <bgcolor=cRed>;
+    BinaryBulkDataHeader binaryBulkDataHeader <bgcolor=cGreen>;
+    unsigned int chunksStartOffset;
+    unsigned int chunksEndOffset;
+    unsigned int chunksLastOffset;
+    unsigned int externalResourceIdsStartOffset;
+    unsigned int externalResourceIdsEndOffset;
+    unsigned int externalResourceIdsLastOffset;
+    __int64 ridSource;
+    unsigned int chunkCount;
+    SHeaderLibraryChunk chunks[chunkCount] <bgcolor=0x026CFC>;
+    ChunkData chunksData[chunkCount] <optimize=false>;
+    unsigned int externalResourceIdCount;
+    StringData externalResourceIDSizesAndOffsets[externalResourceIdCount];
+    ExternalResourceID externalResourceIDs[externalResourceIdCount] <optimize=false>;
+};
+
+SHeaderLibrary headerLibrary;

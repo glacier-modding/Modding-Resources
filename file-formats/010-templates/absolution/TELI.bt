@@ -1,0 +1,27 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: TELI
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef struct STextListEntry
+{
+    int key;
+    int length;
+    string text;
+};
+
+typedef struct TextList
+{
+    unsigned int entryCount;
+    STextListEntry textListEntries[entryCount] <optimize=false>;
+};
+
+TextList textList;

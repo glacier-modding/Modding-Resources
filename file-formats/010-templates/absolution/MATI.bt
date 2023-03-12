@@ -1,0 +1,127 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: MATI
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+enum PROPERTY_TYPE
+{
+    PT_FLOAT = 0,
+    PT_CHAR = 1,
+	PT_UINT32 = 2,
+	PT_LIST = 3
+};
+
+typedef struct SProperty
+{
+    char lName[4];
+	unsigned int lData;
+	unsigned int lSize;
+	PROPERTY_TYPE lType;
+};
+
+struct ZProperty;
+
+typedef struct ZProperty
+{
+    SProperty propertyInfo;
+    local int currentPosition = FTell();
+
+    if (propertyInfo.lType == 0)
+    {
+        if (propertyInfo.lSize == 1)
+        {
+            FSeek(currentPosition - 12);
+        }
+        else
+        {
+            FSeek(propertyInfo.lData);
+        }
+    
+        float value;
+    }
+
+    if (propertyInfo.lType == 1)
+    {
+        FSeek(propertyInfo.lData);
+
+        string value;
+    }
+
+    if (propertyInfo.lType == 2)
+    {
+        if (propertyInfo.lSize == 1)
+        {
+            FSeek(currentPosition - 12);
+        }
+        else
+        {
+            FSeek(propertyInfo.lData);
+        }
+
+        unsigned int value;
+    }
+
+    if (propertyInfo.lType == 3)
+    {
+        FSeek(propertyInfo.lData);
+        
+        ZProperty propertyValues[propertyInfo.lSize] <optimize=false>;
+    }
+
+    FSeek(currentPosition);
+};
+
+typedef struct SRMaterialProperties
+{
+    enum MATERIAL_FLAGS
+	{
+		MF_REFLECTION2D = 1,
+		MF_REFRACTION2D = 2,
+		MF_LIGHTING = 4,
+		MF_EMISSIVE = 8,
+		MF_DISCARD = 16,
+		MF_LM_SKIN = 32,
+		MF_PRIMCLASS_STANDARD = 64,
+		MF_PRIMCLASS_LINKED = 128,
+		MF_PRIMCLASS_WEIGHTED = 256,
+		MF_DOFOVERRIDE = 512,
+		MF_USES_DEFAULT_VS = 1024,
+		MF_USES_SPRITE_SA_VS = 2048,
+		MF_USES_SPRITE_AO_VS = 4096,
+		MF_ALPHA = 8192,
+		MF_USES_SIMPLE_SHADER = 16384
+	};
+
+    unsigned int lMaterialClassType;
+    unsigned int lMaterialEffectIndex;
+	unsigned int lMaterialClassFlags;
+	unsigned int lTransparencyFlags;
+	unsigned int lMaterialDescriptor;
+	unsigned int lImpactMaterial;
+	unsigned int lEffectResource;
+};
+
+typedef struct RenderMaterialInstance
+{
+    local unsigned int materialInfoOffset = ReadUInt();
+    
+    FSeek(materialInfoOffset);
+
+    SRMaterialProperties materialInfo;
+
+    local unsigned int materialInstanceOffset = ReadUInt();
+
+    FSeek(materialInstanceOffset);
+
+    ZProperty instanceProperty;
+};
+
+RenderMaterialInstance renderMaterialInstance;

@@ -1,0 +1,91 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: GIDX
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+unsigned int CalculatePadding(unsigned int alignment)
+{
+    local unsigned int currentPosition = FTell();
+    local unsigned int misalign = currentPosition % alignment;
+
+	if (misalign != 0)
+	{
+	    return alignment - misalign;
+	}
+
+    return 0;
+}
+
+enum EEndian
+{
+    ENDIAN_BIG = 1,
+    ENDIAN_LITTLE = 0
+};
+
+string read_Flags(unsigned char flags)
+{
+    if (flags == 0)
+    {
+        return "Little endian";
+    }
+
+    return "Big endian";
+}
+
+typedef struct BinaryBulkDataHeader
+{
+    char magic[4];
+    unsigned char flags <read=read_Flags>;
+    unsigned char alignment;
+    unsigned char numberOfCustomDataSections;
+    unsigned char unused_byte;
+    unsigned char dataLength0;
+    unsigned char dataLength1;
+    unsigned char dataLength2;
+    unsigned char dataLength3;
+    int unused_dword;
+};
+
+typedef struct ZString
+{
+    unsigned int length;
+    unsigned int charsOffset;
+};
+
+typedef struct SResourceIndexFolder
+{
+    ZString name;
+    int resourceIndicesStartOffset;
+    int resourceIndicesEndOffset;
+    int resourceIndicesLastOffset;
+};
+
+typedef struct FolderData
+{
+    unsigned int nameLength;
+    string name;
+    unsigned char __padding[CalculatePadding(4)];
+    unsigned int indexCount;
+    int indices[indexCount];
+};
+
+typedef struct SResourceIndex
+{
+    BinaryBulkDataHeader binaryBulkDataHeader;
+    int foldersStartOffset;
+    int foldersEndOffset;
+    int foldersLastOffset;
+    unsigned int folderCount;
+    SResourceIndexFolder folders[folderCount];
+    FolderData folderData[folderCount] <optimize=false>;
+};
+
+SResourceIndex resourceIndex;

@@ -1,0 +1,77 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: MATB
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+string ReadType(unsigned char type)
+{
+    string result;
+
+    switch (type)
+    {
+	    case 1:
+		    result = "UInt32";
+			break;
+		case 2:
+			result = "SColorRGB";
+			break;
+		case 3:
+			result = "SColorRGBA";
+			break;
+		case 4:
+			result = "float";
+			break;
+		case 5:
+			result = "SVector2";
+			break;
+		case 6:
+			result = "SVector3";
+			break;
+		case 7:
+			result = "SVector4";
+			break;
+	}
+    
+    return result;
+};
+
+typedef struct SModifier
+{
+	unsigned char type <read=ReadType>;
+    unsigned int nameLength;
+    string name;
+};
+
+typedef struct RenderMaterialEntityBlueprint
+{
+    SModifier modifiers[modifierCount] <optimize=false>;
+};
+
+local int modifierCount;
+local unsigned char type;
+local unsigned int nameLength;
+
+while (!FEof())
+{
+    type = ReadUByte();
+    
+    FSkip(1);
+
+    nameLength = ReadUInt();
+
+    FSkip(4 + nameLength);
+
+    ++modifierCount;
+}
+
+FSeek(0);
+
+RenderMaterialEntityBlueprint renderMaterialEntityBlueprint;

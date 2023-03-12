@@ -1,0 +1,19 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: ASET
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef struct AspectEntityType
+{
+    unsigned int referenceIndices[FileSize() / 4];
+};
+
+AspectEntityType aspectEntityType;

@@ -1,0 +1,37 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef struct ReferenceIndex
+{
+    unsigned int referenceIndex;
+};
+
+typedef struct NameOffset
+{
+    unsigned int nameOffset;
+};
+
+typedef struct Name
+{
+    string name;
+};
+
+typedef struct ChartType
+{
+    unsigned int entryCount;
+    ReferenceIndex referenceIndices[entryCount];
+    NameOffset nameOffsets[entryCount];
+    Name names[entryCount] <optimize=false>;
+};
+
+ChartType chartType;

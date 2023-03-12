@@ -1,0 +1,215 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef struct SVector2
+{
+    float x;
+    float y;
+};
+
+typedef struct SVector3
+{
+    float x;
+    float y;
+    float z;
+};
+
+typedef struct SVector4
+{
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+typedef struct ShortSVector4
+{
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+typedef struct SPrimHeader
+{
+	unsigned char lDrawDestination;
+	unsigned char lPackType;
+	unsigned short lType;
+	unsigned int lPropertyFlags;
+	unsigned int lBoneRigResourceIndex;
+	unsigned int lNumObjects;
+	unsigned int lObjectTable;
+	SVector3 vBoundingBoxMin;
+	SVector3 vBoundingBoxMax;
+    unsigned int __padding;
+};
+
+typedef struct ObjectHeader
+{
+    unsigned char lDrawDestination;
+	unsigned char lPackType;
+	unsigned short lType;
+	unsigned char lSubType;
+    unsigned char lProperties;
+	unsigned char lLODMask;
+	unsigned char lVariantId;
+	unsigned char nZBias;
+	unsigned char nZOffset;
+	unsigned short lMaterialId;
+	unsigned int lWireColor;
+	unsigned int lColor1;
+	SVector3 vBoundingBoxMin;
+	SVector3 vBoundingBoxMax;
+};
+
+typedef struct ObjectDetails
+{
+    unsigned int lSubMeshTable;
+	unsigned int lNumFrames;
+	unsigned short lFrameStart;
+	unsigned short lFrameStep;
+	SVector4 vPosScale;
+	SVector4 vPosBias;
+	SVector2 vTexScale;
+	SVector2 vTexBias;
+};
+
+enum SUBTYPE
+{
+	SUBTYPE_STANDARD = 0,
+	SUBTYPE_LINKED = 1,
+	SUBTYPE_WEIGHTED = 2,
+	SUBTYPE_STANDARDUV2 = 3,
+	SUBTYPE_STANDARDUV3 = 4,
+	SUBTYPE_STANDARDUV4 = 5
+};
+
+enum PROPERTY_FLAGS
+{
+	PROPERTY_XAXISLOCKED = 1,
+	PROPERTY_YAXISLOCKED = 2,
+	PROPERTY_ZAXISLOCKED = 4,
+	PROPERTY_HIRES_POSITIONS = 8,
+	PROPERTY_PS3_EDGE = 16,
+	PROPERTY_COLOR1 = 32,
+	PROPERTY_ISNOPHYSICSPROP = 64
+};
+
+typedef struct MeshDetails
+{
+    unsigned int lNumVertices;
+    unsigned int lVertices;
+    unsigned int lNumIndices;
+    unsigned int lIndices;
+    unsigned int lCollision;
+    unsigned short lColorStreamSize;
+	unsigned char lNumUVChannels;
+	unsigned char lDummy1;
+};
+
+typedef struct SColorRGBA
+{
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+	unsigned char a;
+};
+
+typedef struct FloatVector6
+{
+	float a, b, c, d, e, f;
+};
+
+typedef struct ByteVector6
+{
+	unsigned char a, b, c, d, e, f;
+};
+
+typedef struct SVertex
+{
+	SVector4 position;
+
+    if (!isHighRes)
+	{
+        ShortSVector4 position;
+	}
+	else
+	{
+		SVector3 position;
+	}
+
+    
+    
+	SVector4 normal;
+	SVector4 tangent;
+	SVector4 biTangent;
+    unsigned char uvCount;
+	SVector2 uv[uvCount];
+	SColorRGBA color;
+	FloatVector6 weight;
+	ByteVector6 joint;
+};
+
+typedef struct Mesh
+{
+	ObjectHeader header;
+	MeshDetails details;
+
+    FSeek(details.lIndices);
+
+	unsigned short indices[details.lNumIndices];
+
+    FSeek(details.lVertices);
+	SVertex vertices[vertexCount];
+
+    local PROPERTY_FLAGS propertyFlags = (PROPERTY_FLAGS)header.lProperties;
+	local SUBTYPE subType = (SUBTYPE)header.lSubType;
+	local unsigned char isHighRes = (propertyFlags & PROPERTY_HIRES_POSITIONS) == PROPERTY_HIRES_POSITIONS;
+	local unsigned char hasColor1 = (propertyFlags & PROPERTY_COLOR1) == PROPERTY_COLOR1;
+	local unsigned char isWeighted = subType == SUBTYPE_WEIGHTED;
+	local unsigned char isLinked = subType == SUBTYPE_LINKED;
+
+    if (isWeighted || isLinked)
+    {
+    }
+};
+
+typedef struct Object
+{
+    ObjectHeader header;
+	ObjectDetails details;
+
+    FSeek(details.lSubMeshTable);
+
+    local unsigned int meshOffset = ReadUInt();
+
+    FSeek(meshOffset);
+
+    Mesh mesh;
+};
+
+unsigned int primaryHeaderOffset;
+unsigned char __padding[12];
+
+FSeek(primaryHeaderOffset);
+
+SPrimHeader primHeader;
+
+FSeek(primHeader.lObjectTable);
+
+unsigned int objectOffsets[primHeader.lNumObjects];
+unsigned char __padding2[primaryHeaderOffset - FTell()];
+
+FSeek(objectOffsets[0]);
+
+Object objects[primHeader.lNumObjects];

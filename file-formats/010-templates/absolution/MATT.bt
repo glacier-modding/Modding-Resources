@@ -1,0 +1,156 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: MATT
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef struct SColorRGB
+{
+	float r;
+	float g;
+	float b;
+};
+
+typedef struct SColorRGBA
+{
+	float r;
+	float g;
+	float b;
+    float a;
+};
+
+typedef struct SVector2
+{
+    float x;
+    float y;
+};
+
+typedef struct SVector3
+{
+    float x;
+    float y;
+    float z;
+};
+
+typedef struct SVector4
+{
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+string ReadType(unsigned char type)
+{
+    string result;
+
+    switch (type)
+    {
+	    case 1:
+		    result = "UInt32";
+			break;
+		case 2:
+			result = "SColorRGB";
+			break;
+		case 3:
+			result = "SColorRGBA";
+			break;
+		case 4:
+			result = "float";
+			break;
+		case 5:
+			result = "SVector2";
+			break;
+		case 6:
+			result = "SVector3";
+			break;
+		case 7:
+			result = "SVector4";
+			break;
+	}
+    
+    return result;
+};
+
+typedef struct SModifier
+{
+	unsigned char type <read=ReadType>;
+	
+    switch (type)
+    {
+	    case 1:
+		    unsigned int value;
+			break;
+		case 2:
+			SColorRGB value;
+			break;
+		case 3:
+			SColorRGBA value;
+			break;
+		case 4:
+			float value;
+			break;
+		case 5:
+			SVector2 value;
+			break;
+		case 6:
+			SVector3 value;
+			break;
+		case 7:
+			SVector4 value;
+			break;
+	}
+};
+
+typedef struct RenderMaterialEntity
+{
+    SModifier modifiers[modifierCount] <optimize=false>;
+};
+
+local int modifierCount;
+local unsigned char type;
+
+while (!FEof())
+{
+    type = ReadUByte();
+
+    FSkip(1);
+
+    switch (type)
+    {
+	    case 1:
+		    FSkip(sizeof(unsigned int));
+			break;
+		case 2:
+			FSkip(sizeof(SColorRGB));
+			break;
+		case 3:
+			FSkip(sizeof(SColorRGBA));
+			break;
+		case 4:
+            FSkip(sizeof(float));
+			break;
+		case 5:
+			FSkip(sizeof(SVector2));
+			break;
+		case 6:
+			FSkip(sizeof(SVector3));
+			break;
+		case 7:
+			FSkip(sizeof(SVector4));
+			break;
+	}
+
+    ++modifierCount;
+}
+
+FSeek(0);
+
+RenderMaterialEntity renderMaterialEntity;

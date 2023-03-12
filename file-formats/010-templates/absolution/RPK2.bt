@@ -1,0 +1,137 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: RPK2
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+ubyte IsPatchFile()
+{
+    FSeek(0x19);
+    
+    local uint patchDeletionEntryCount = ReadUInt();
+    local ubyte isPatchFile = false;
+
+    if ((patchDeletionEntryCount * 0x8 + 0x2D) >= FileSize())
+    {
+        return false;
+    }
+    else
+    {
+        FSeek(patchDeletionEntryCount * 0x8 + 0x24);
+
+        local ubyte testZeroValue = ReadUByte();
+
+        FSeek(FTell() + 1);
+
+        local uint64 testHeaderOffset = ReadUInt64();
+
+        if (testHeaderOffset == (resourceHeadersChunkSize + resourcesChunkSize + patchDeletionEntryCount * 0x8 + 0x1D) && testZeroValue == 0)
+        {
+            FSeek(0x19);
+            
+            return true;
+        }
+    }
+    
+    FSeek(0x19);
+    
+    return false;   
+}
+
+typedef struct ResourceInfo
+{
+    uint64 hash;
+    uint64 dataOffset;
+    uint dataSize;
+
+    local uint64 currentPosition = FTell();
+
+    FSeek(dataOffset);
+    
+    ubyte resourceData[dataSize & 0x3FFFFFFF];
+    
+    FSeek(currentPosition);
+};
+
+typedef struct SResourceHeaderHeader
+{
+    char m_type[4];
+    uint m_nReferencesChunkSize;
+    uint m_nStatesChunkSize;
+    uint m_nDataSize;
+    uint m_nSystemMemoryRequirement;
+    uint m_nVideoMemoryRequirement;
+};
+
+typedef struct Resource
+{
+    SResourceHeaderHeader resourceHeader;
+    
+    if (resourceHeader.m_nReferencesChunkSize > 0)
+    {
+        uint referenceCount;
+
+        local uint referenceCount2 = referenceCount & 0x3FFFFFFF;
+        local ubyte referenceTableNormal = true;
+        local int zeroCount = 0;
+        local uint64 i;
+        local uint64 currentPosition = FTell();
+        local ubyte value;
+
+        for (i = 0; i < referenceCount2; ++i)
+        {
+            FSeek(FTell() + i * 0x8 + 0x7);
+            value = ReadUByte();
+
+            if (value == 0)
+            {
+                zeroCount++;
+            }            
+        }
+
+        FSeek(currentPosition);
+
+        if (zeroCount == referenceCount2)
+        {
+            referenceTableNormal = false;
+        }
+
+        if (referenceTableNormal)
+        {
+            ubyte flags[referenceCount2];
+            uint64 hashes[referenceCount2];
+        }
+        else
+        {
+            uint64 hashes[referenceCount2];
+            ubyte flags[referenceCount2];
+        }
+    }
+};
+
+char magic[4];
+uint unknown;
+ubyte chunkNumber;
+ubyte chunkType;
+ubyte chunkPatchNumber;
+ubyte unknown;
+ubyte unknown;
+uint resourceCount;
+uint resourceHeadersChunkSize;
+uint resourcesChunkSize;
+
+if (IsPatchFile())
+{
+    uint patchDeletionEntryCount;
+    uint64 patchEntryHashes[patchDeletionEntryCount];
+}
+
+ResourceInfo resourcesInfo[resourceCount] <optimize=false>;
+Resource resources[resourceCount] <optimize=false>;

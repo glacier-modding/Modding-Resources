@@ -1,0 +1,412 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+enum ETextureFlags
+{
+	TEXF_SWIZZLED = 1,
+	TEXF_DEFERRED = 2,
+	TEXF_MEMORY_READY_XBOX360 = 4,
+	TEXF_GAMMA = 8,
+	TEXF_EMISSIVE = 16,
+	TEXF_DDSC_ENCODED = 32
+};
+
+enum ERenderFormat
+{
+    RENDER_FORMAT_NONE = 0,
+    RENDER_FORMAT_R32G32B32A32_TYPELESS = 1,
+	RENDER_FORMAT_R32G32B32A32_FLOAT = 2,
+	RENDER_FORMAT_R32G32B32A32_UINT = 3,
+	RENDER_FORMAT_R32G32B32A32_SINT = 4,
+	RENDER_FORMAT_R32G32B32_TYPELESS = 5,
+	RENDER_FORMAT_R32G32B32_FLOAT = 6,
+	RENDER_FORMAT_R32G32B32_UINT = 7,
+	RENDER_FORMAT_R32G32B32_SINT = 8,
+	RENDER_FORMAT_R16G16B16A16_TYPELESS = 9,
+	RENDER_FORMAT_R16G16B16A16_FLOAT = 10,
+	RENDER_FORMAT_R16G16B16A16_UNORM = 11,
+	RENDER_FORMAT_R16G16B16A16_UINT = 12,
+	RENDER_FORMAT_R16G16B16A16_SNORM = 13,
+	RENDER_FORMAT_R16G16B16A16_SINT = 14,
+	RENDER_FORMAT_R32G32_TYPELESS = 15,
+	RENDER_FORMAT_R32G32_FLOAT = 16,
+	RENDER_FORMAT_R32G32_UINT = 17,
+	RENDER_FORMAT_R32G32_SINT = 18,
+	RENDER_FORMAT_R32G8X24_TYPELESS = 19,
+	RENDER_FORMAT_D32_FLOAT_S8X24_UINT = 20,
+	RENDER_FORMAT_R32_FLOAT_X8X24_TYPELESS = 21,
+	RENDER_FORMAT_X32_TYPELESS_G8X24_UINT = 22,
+	RENDER_FORMAT_R10G10B10A2_TYPELESS = 23,
+	RENDER_FORMAT_R10G10B10A2_UNORM = 24,
+	RENDER_FORMAT_R10G10B10A2_UINT = 25,
+	RENDER_FORMAT_R11G11B10_FLOAT = 26,
+	RENDER_FORMAT_R8G8B8A8_TYPELESS = 27,
+	RENDER_FORMAT_R8G8B8A8_UNORM = 28,
+	RENDER_FORMAT_R8G8B8A8_UNORM_SRGB = 29,
+	RENDER_FORMAT_R8G8B8A8_UINT = 30,
+	RENDER_FORMAT_R8G8B8A8_SNORM = 31,
+	RENDER_FORMAT_R8G8B8A8_SINT = 32,
+	RENDER_FORMAT_R16G16_TYPELESS = 33,
+	RENDER_FORMAT_R16G16_FLOAT = 34,
+	RENDER_FORMAT_R16G16_UNORM = 35,
+	RENDER_FORMAT_R16G16_UINT = 36,
+	RENDER_FORMAT_R16G16_SNORM = 37,
+	RENDER_FORMAT_R16G16_SINT = 38,
+	RENDER_FORMAT_R32_TYPELESS = 39,
+	RENDER_FORMAT_D32_FLOAT = 40,
+	RENDER_FORMAT_R32_FLOAT = 41,
+	RENDER_FORMAT_R32_UINT = 42,
+	RENDER_FORMAT_R32_SINT = 43,
+	RENDER_FORMAT_R24G8_TYPELESS = 44,
+	RENDER_FORMAT_D24_UNORM_S8_UINT = 45,
+	RENDER_FORMAT_R24_UNORM_X8_TYPELESS = 46,
+	RENDER_FORMAT_X24_TYPELESS_G8_UINT = 47,
+	RENDER_FORMAT_R9G9B9E5_SHAREDEXP = 48,
+	RENDER_FORMAT_R8G8_B8G8_UNORM = 49,
+	RENDER_FORMAT_G8R8_G8B8_UNORM = 50,
+	RENDER_FORMAT_R8G8_TYPELESS = 51,
+	RENDER_FORMAT_R8G8_UNORM = 52,
+	RENDER_FORMAT_R8G8_UINT = 53,
+	RENDER_FORMAT_R8G8_SNORM = 54,
+	RENDER_FORMAT_R8G8_SINT = 55,
+	RENDER_FORMAT_R16_TYPELESS = 56,
+	RENDER_FORMAT_R16_FLOAT = 57,
+	RENDER_FORMAT_D16_UNORM = 58,
+	RENDER_FORMAT_R16_UNORM = 59,
+	RENDER_FORMAT_R16_UINT = 60,
+	RENDER_FORMAT_R16_SNORM = 61,
+	RENDER_FORMAT_R16_SINT = 62,
+	RENDER_FORMAT_B5G6R5_UNORM = 63,
+	RENDER_FORMAT_B5G5R5A1_UNORM = 64,
+	RENDER_FORMAT_R8_TYPELESS = 65,
+	RENDER_FORMAT_R8_UNORM = 66,
+	RENDER_FORMAT_R8_UINT = 67,
+	RENDER_FORMAT_R8_SNORM = 68,
+	RENDER_FORMAT_R8_SINT = 69,
+	RENDER_FORMAT_A8_UNORM = 70,
+	RENDER_FORMAT_R1_UNORM = 71,
+	RENDER_FORMAT_BC1_TYPELESS = 72,
+	RENDER_FORMAT_BC1_UNORM = 73,
+	RENDER_FORMAT_BC1_UNORM_SRGB = 74,
+	RENDER_FORMAT_BC2_TYPELESS = 75,
+	RENDER_FORMAT_BC2_UNORM = 76,
+	RENDER_FORMAT_BC2_UNORM_SRGB = 77,
+	RENDER_FORMAT_BC3_TYPELESS = 78,
+	RENDER_FORMAT_BC3_UNORM = 79,
+	RENDER_FORMAT_BC3_UNORM_SRGB = 80,
+	RENDER_FORMAT_BC4_TYPELESS = 81,
+	RENDER_FORMAT_BC4_UNORM = 82,
+	RENDER_FORMAT_BC4_SNORM = 83,
+	RENDER_FORMAT_BC5_TYPELESS = 84,
+	RENDER_FORMAT_BC5_UNORM = 85,
+	RENDER_FORMAT_BC5_SNORM = 86,
+	RENDER_FORMAT_R16G16B16_FLOAT = 87,
+	RENDER_FORMAT_INDEX_32 = 88,
+	RENDER_FORMAT_INDEX_16 = 89,
+	RENDER_FORMAT_LE_X2R10G10B10_UNORM = 90,
+	RENDER_FORMAT_LE_X8R8G8B8_UNORM = 91,
+	RENDER_FORMAT_X16Y16Z16_SNORM = 92
+};
+
+enum EInterpretAs
+{
+	INTERPRET_AS_COLOR = 0,
+	INTERPRET_AS_NORMAL = 1,
+	INTERPRET_AS_HEIGHT = 2
+};
+
+enum EDimensions
+{
+	DIMENSIONS_2D = 0,
+	DIMENSIONS_CUBE = 1,
+	DIMENSIONS_VOLUME = 2
+};
+
+enum ERenderResourceMipInterpolation
+{
+    eRENDER_RESOURCE_MIP_INTERPOLATION_NONE = 0,
+    eRENDER_RESOURCE_MIP_INTERPOLATION_POINT = 1,
+    eRENDER_RESOURCE_MIP_INTERPOLATION_LINEAR = 2,
+    eRENDER_RESOURCE_MIP_INTERPOLATION_COUNT = 3,
+};
+
+string ReadFlags(ETextureFlags nFlags)
+{
+    ETextureFlags flags = (ETextureFlags)nFlags;
+    string result;
+
+    if (flags & TEXF_SWIZZLED)
+    {
+        result += "TEXF_SWIZZLED, ";
+    }
+
+    if (flags & TEXF_DEFERRED)
+    {
+        result += "TEXF_DEFERRED, ";
+    }
+
+    if (flags & TEXF_MEMORY_READY_XBOX360)
+    {
+        result += "TEXF_MEMORY_READY_XBOX360, ";
+    }
+
+    if (flags & TEXF_EMISSIVE)
+    {
+        result += "TEXF_EMISSIVE, ";
+    }
+
+    if (flags & TEXF_DDSC_ENCODED)
+    {
+        result += "TEXF_DDSC_ENCODED, ";
+    }
+
+    result = StrDel(result, Strlen(result) - 2, 2);
+
+    return result;
+};
+
+string ReadFormat(unsigned short nFormat)
+{
+    ERenderFormat renderFormat = (ERenderFormat)nFormat;
+
+    return EnumToString(renderFormat);
+};
+
+string ReadInterpretAs(unsigned char nInterpretAs)
+{
+    EInterpretAs interpretAs = (EInterpretAs)nInterpretAs;
+
+    return EnumToString(interpretAs);
+};
+
+string ReadDimensions(unsigned char nDimensions)
+{
+    EDimensions dimensions = (EDimensions)nDimensions;
+
+    return EnumToString(dimensions);
+};
+
+string ReadMipInterpolation(unsigned char nMipInterpolation)
+{
+    ERenderResourceMipInterpolation renderResourceMipInterpolation = (ERenderResourceMipInterpolation)nMipInterpolation;
+
+    return EnumToString(renderResourceMipInterpolation);
+};
+
+struct SRenderFormatDesc
+{
+    unsigned int nBlockWidth;
+	unsigned int nBlockHeight;
+	unsigned int nBytesPerBlock;
+};
+
+void ZRenderGetFormatDesc(SRenderFormatDesc& pDesc, const ERenderFormat& eFormat)
+{
+    switch (eFormat)
+    {
+        case RENDER_FORMAT_R32G32B32A32_TYPELESS:
+        case RENDER_FORMAT_R32G32B32A32_FLOAT:
+        case RENDER_FORMAT_R32G32B32A32_UINT:
+        case RENDER_FORMAT_R32G32B32A32_SINT:
+            pDesc.nBlockWidth = 1;
+            pDesc.nBlockHeight = 1;
+            pDesc.nBytesPerBlock = 16;
+            break;
+        case RENDER_FORMAT_R32G32B32_TYPELESS:
+        case RENDER_FORMAT_R32G32B32_FLOAT:
+        case RENDER_FORMAT_R32G32B32_UINT:
+        case RENDER_FORMAT_R32G32B32_SINT:
+            pDesc.nBlockWidth = 1;
+            pDesc.nBlockHeight = 1;
+            pDesc.nBytesPerBlock = 12;
+            break;
+        case RENDER_FORMAT_R16G16B16A16_TYPELESS:
+        case RENDER_FORMAT_R16G16B16A16_FLOAT:
+        case RENDER_FORMAT_R16G16B16A16_UNORM:
+        case RENDER_FORMAT_R16G16B16A16_UINT:
+        case RENDER_FORMAT_R16G16B16A16_SNORM:
+        case RENDER_FORMAT_R16G16B16A16_SINT:
+        case RENDER_FORMAT_R32G32_TYPELESS:
+        case RENDER_FORMAT_R32G32_FLOAT:
+        case RENDER_FORMAT_R32G32_UINT:
+        case RENDER_FORMAT_R32G32_SINT:
+        case RENDER_FORMAT_R32G8X24_TYPELESS:
+        case RENDER_FORMAT_D32_FLOAT_S8X24_UINT:
+        case RENDER_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+        case RENDER_FORMAT_X32_TYPELESS_G8X24_UINT:
+            pDesc.nBlockWidth = 1;
+            pDesc.nBlockHeight = 1;
+            pDesc.nBytesPerBlock = 8;
+            break;
+        case RENDER_FORMAT_R10G10B10A2_TYPELESS:
+        case RENDER_FORMAT_R10G10B10A2_UNORM:
+        case RENDER_FORMAT_R10G10B10A2_UINT:
+        case RENDER_FORMAT_R11G11B10_FLOAT:
+        case RENDER_FORMAT_R8G8B8A8_TYPELESS:
+        case RENDER_FORMAT_R8G8B8A8_UNORM:
+        case RENDER_FORMAT_R8G8B8A8_UNORM_SRGB:
+        case RENDER_FORMAT_R8G8B8A8_UINT:
+        case RENDER_FORMAT_R8G8B8A8_SNORM:
+        case RENDER_FORMAT_R8G8B8A8_SINT:
+        case RENDER_FORMAT_R16G16_TYPELESS:
+        case RENDER_FORMAT_R16G16_FLOAT:
+        case RENDER_FORMAT_R16G16_UNORM:
+        case RENDER_FORMAT_R16G16_UINT:
+        case RENDER_FORMAT_R16G16_SNORM:
+        case RENDER_FORMAT_R16G16_SINT:
+        case RENDER_FORMAT_R32_TYPELESS:
+        case RENDER_FORMAT_D32_FLOAT:
+        case RENDER_FORMAT_R32_FLOAT:
+        case RENDER_FORMAT_R32_UINT:
+        case RENDER_FORMAT_R32_SINT:
+        case RENDER_FORMAT_R24G8_TYPELESS:
+        case RENDER_FORMAT_D24_UNORM_S8_UINT:
+        case RENDER_FORMAT_R24_UNORM_X8_TYPELESS:
+        case RENDER_FORMAT_X24_TYPELESS_G8_UINT:
+        case RENDER_FORMAT_R9G9B9E5_SHAREDEXP:
+        case RENDER_FORMAT_R8G8_B8G8_UNORM:
+        case RENDER_FORMAT_G8R8_G8B8_UNORM:
+        case RENDER_FORMAT_INDEX_32:
+        case RENDER_FORMAT_LE_X8R8G8B8_UNORM:
+            pDesc.nBlockWidth = 1;
+            pDesc.nBlockHeight = 1;
+            pDesc.nBytesPerBlock = 4;
+            break;
+        case RENDER_FORMAT_R8G8_TYPELESS:
+        case RENDER_FORMAT_R8G8_UNORM:
+        case RENDER_FORMAT_R8G8_UINT:
+        case RENDER_FORMAT_R8G8_SNORM:
+        case RENDER_FORMAT_R8G8_SINT:
+        case RENDER_FORMAT_R16_TYPELESS:
+        case RENDER_FORMAT_R16_FLOAT:
+        case RENDER_FORMAT_D16_UNORM:
+        case RENDER_FORMAT_R16_UNORM:
+        case RENDER_FORMAT_R16_UINT:
+        case RENDER_FORMAT_R16_SNORM:
+        case RENDER_FORMAT_R16_SINT:
+        case RENDER_FORMAT_B5G6R5_UNORM:
+        case RENDER_FORMAT_B5G5R5A1_UNORM:
+        case RENDER_FORMAT_INDEX_16:
+            pDesc.nBlockWidth = 1;
+            pDesc.nBlockHeight = 1;
+            pDesc.nBytesPerBlock = 2;
+            break;
+        case RENDER_FORMAT_R8_TYPELESS:
+        case RENDER_FORMAT_R8_UNORM:
+        case RENDER_FORMAT_R8_UINT:
+        case RENDER_FORMAT_R8_SNORM:
+        case RENDER_FORMAT_R8_SINT:
+        case RENDER_FORMAT_A8_UNORM:
+            pDesc.nBlockWidth = 1;
+            pDesc.nBlockHeight = 1;
+            pDesc.nBytesPerBlock = 1;
+            break;
+        case RENDER_FORMAT_R1_UNORM:
+            pDesc.nBlockWidth = 1;
+            pDesc.nBlockHeight = 1;
+            pDesc.nBytesPerBlock = 0;
+            break;
+        case RENDER_FORMAT_BC1_TYPELESS:
+        case RENDER_FORMAT_BC1_UNORM:
+        case RENDER_FORMAT_BC1_UNORM_SRGB:
+        case RENDER_FORMAT_BC4_TYPELESS:
+        case RENDER_FORMAT_BC4_UNORM:
+        case RENDER_FORMAT_BC4_SNORM:
+            pDesc.nBlockWidth = 4;
+            pDesc.nBlockHeight = 4;
+            pDesc.nBytesPerBlock = 8;
+            break;
+        case RENDER_FORMAT_BC2_TYPELESS:
+        case RENDER_FORMAT_BC2_UNORM:
+        case RENDER_FORMAT_BC2_UNORM_SRGB:
+        case RENDER_FORMAT_BC3_TYPELESS:
+        case RENDER_FORMAT_BC3_UNORM:
+        case RENDER_FORMAT_BC3_UNORM_SRGB:
+        case RENDER_FORMAT_BC5_TYPELESS:
+        case RENDER_FORMAT_BC5_UNORM:
+        case RENDER_FORMAT_BC5_SNORM:
+            pDesc.nBlockWidth = 4;
+            pDesc.nBlockHeight = 4;
+            pDesc.nBytesPerBlock = 16;
+            break;
+    }
+}
+
+typedef struct STextureMapHeader
+{
+    unsigned int nNumSlices;
+    unsigned int nTotalSize;
+    unsigned int nFlags <read=ReadFlags>;
+	unsigned short nWidth;
+	unsigned short nHeight;
+	unsigned short nFormat <read=ReadFormat>;
+	unsigned char nNumMipLevels;
+	unsigned char nDefaultMipLevel;
+	unsigned char nInterpretAs <read=ReadInterpretAs>;
+	unsigned char nDimensions <read=ReadDimensions>;
+	unsigned char nMipInterpolation <read=ReadMipInterpolation>;
+    unsigned char __padding;
+	unsigned int nIADataSize;
+	unsigned int nIADataOffset;
+};
+
+local int mipMapLevel = 0;
+
+typedef struct SMipLevel
+{
+    local SRenderFormatDesc desc;
+    local ERenderFormat eFormat = (ERenderFormat)textureMapHeader.nFormat;
+
+    ZRenderGetFormatDesc(desc, eFormat);  
+
+    local unsigned int nWidth = textureMapHeader.nWidth >> mipMapLevel;
+	local unsigned int nHeight = textureMapHeader.nHeight >> mipMapLevel;
+	local unsigned int nSizeInBytes = desc.nBytesPerBlock *
+        ((desc.nBlockWidth + nWidth - 1) /
+            desc.nBlockWidth *
+            ((desc.nBlockHeight + nHeight - 1) /
+                desc.nBlockHeight));
+    unsigned char data[nSizeInBytes];
+
+    mipMapLevel++;
+};
+
+typedef struct SVector2
+{
+    float x;
+    float y;
+};
+
+typedef struct STilePolygonVertex
+{
+    SVector2 posLerp;
+    SVector2 textUV;
+};
+
+typedef struct IAData
+{
+    unsigned int polygonVertexCount;
+    unsigned int altasWidth;
+    unsigned int altasHeight;
+    STilePolygonVertex tilePolygonVertices[polygonVertexCount * altasWidth * altasHeight];
+};
+
+typedef struct TextureMap
+{
+    STextureMapHeader textureMapHeader;
+    SMipLevel mipLevels[textureMapHeader.nNumMipLevels] <optimize=false>;
+    //unsigned char iaData[FileSize() - FTell()];
+    IAData iaData;
+};
+
+TextureMap textureMap;
