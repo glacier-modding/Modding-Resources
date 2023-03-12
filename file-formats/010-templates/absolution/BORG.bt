@@ -1,0 +1,216 @@
+//------------------------------------------------
+//--- 010 Editor v13.0 Binary Template
+//
+//      File: BORG
+//   Authors: Pavle
+//   Version: 1.0
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef struct SVector3
+{
+    float x;
+    float y;
+    float z;
+};
+
+typedef struct SVector4
+{
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+typedef struct SMatrix43
+{
+	SVector3 r[4];
+};
+
+typedef struct SMatrix23
+{
+	SVector3 r[2];
+};
+
+typedef struct SBoneDefinition
+{
+    SVector3 Center;
+    unsigned int lPrevBoneNr;
+    SVector3 Size;
+    char Name[34];
+    unsigned char nBodyPart;
+    unsigned char __padding;
+};
+
+typedef struct SPoseBone
+{
+    float m_quat[4];
+    float m_pos[4];
+};
+
+enum EBoneConstrainType
+{
+    BC_LOOKAT = 1,
+    BC_ROTATION = 2
+};
+
+string ReadType(unsigned char type)
+{
+    EBoneConstrainType boneConstrainType = (EBoneConstrainType)type;
+
+    return EnumToString(boneConstrainType);
+};
+
+typedef struct SBoneConstraintsHeader
+{
+    unsigned int m_lNrConstraints;
+};
+
+typedef struct SBoneConstraintLookAt
+{
+    unsigned char m_Type <read=ReadType>;
+    unsigned char m_BoneIndex;
+    unsigned char m_lNrTargets;
+    unsigned char m_lLookAtAxis;
+    unsigned char m_lUpBoneAlignmentAxis;
+    unsigned char m_lLookAtFlip;
+    unsigned char m_lUpFlip;
+    unsigned char m_UpnodeControl;
+    unsigned char m_UpNodeParentIdx;
+    unsigned char m_TargetParentIdx[2];
+    unsigned char __padding;
+    float m_lBoneTargetsWeights[2];
+    SMatrix23 m_TargetPos;
+    float m_UpPos[3];
+};
+
+typedef struct SBoneConstrainRotate
+{
+    unsigned char m_Type <read=ReadType>;
+    unsigned char m_BoneIndex;
+    unsigned char m_ReferenceBoneIdx;
+    float m_TwistWeight;
+};
+
+typedef struct SPoseBoneHeader
+{
+    unsigned int m_nPoseBoneArrayOffset;
+    unsigned int m_nPoseBoneIndeArrayOffset;
+    int m_nPoseBoneCountTotal;
+    unsigned int m_nPoseEntryIndexArrayOffset;
+    unsigned int m_nPoseBoneCountArrayOffset;
+    int m_nPoseCount;
+    unsigned int m_nNamesListOffset;
+    unsigned int m_nNamesEntryIndexArrayOffset;
+    unsigned int m_nFaceBoneIndexArrayOffset;
+    int m_nFaceBoneCount;
+};
+
+typedef struct SQuaternion
+{
+    SVector4 w128;
+};
+
+typedef struct SQV
+{
+    SQuaternion m_Rotation;
+    SVector4 m_Translation;
+};
+
+typedef struct Bone
+{
+    string boneName;
+};
+
+typedef struct SBoneRig
+{
+    unsigned int m_NumberOfBones;
+    unsigned int m_NumberOfAnimatedBones;
+    unsigned int lBoneDefinitions;
+    unsigned int BindPose;
+    unsigned int BindPoseInvGlobalMats;
+    unsigned int lBoneConstraintsHeader;
+    unsigned int lPoseBoneHeader;
+    unsigned int lInvertGlobalBones;
+    unsigned int boneMapOffset;
+    unsigned char __padding2[12];
+};
+
+unsigned int primaryHeaderOffset;
+unsigned char __padding[12];
+
+FSeek(primaryHeaderOffset);
+
+SBoneRig boneRig;
+
+FSeek(boneRig.lBoneDefinitions);
+
+SBoneDefinition boneDefinitions[boneRig.m_NumberOfBones];
+
+FSeek(boneRig.BindPose);
+
+SQV bindPoses[boneRig.m_NumberOfBones];
+
+FSeek(boneRig.BindPoseInvGlobalMats);
+
+SMatrix43 bindPoseInvGlobalMats[boneRig.m_NumberOfBones];
+
+FSeek(boneRig.lBoneConstraintsHeader);
+
+SBoneConstraintsHeader boneConstraintsHeader;
+local unsigned char type = ReadUByte();
+
+if (type == 1)
+{
+    SBoneConstraintLookAt boneConstraints[boneConstraintsHeader.m_lNrConstraints];
+}
+else if (type == 2)
+{
+    SBoneConstrainRotate boneConstraints[boneConstraintsHeader.m_lNrConstraints];
+}
+
+unsigned char __padding3[4];
+
+FSeek(boneRig.lPoseBoneHeader);
+
+SPoseBoneHeader poseBoneHeader;
+unsigned char __padding4[8];
+
+FSeek(poseBoneHeader.m_nPoseBoneArrayOffset);
+
+SPoseBone poseBones[poseBoneHeader.m_nPoseBoneCountTotal];
+unsigned char __padding5[poseBoneHeader.m_nPoseBoneIndeArrayOffset - FTell()];
+
+FSeek(poseBoneHeader.m_nPoseBoneIndeArrayOffset);
+
+int poseBoneIndeArray[poseBoneHeader.m_nPoseBoneCountTotal];
+unsigned char __padding6[poseBoneHeader.m_nPoseEntryIndexArrayOffset - FTell()];
+
+FSeek(poseBoneHeader.m_nPoseEntryIndexArrayOffset);
+
+int poseEntryIndexArray[poseBoneHeader.m_nPoseCount];
+unsigned char __padding7[poseBoneHeader.m_nPoseBoneCountArrayOffset - FTell()];
+
+FSeek(poseBoneHeader.m_nPoseBoneCountArrayOffset);
+
+int poseBoneCountArray[poseBoneHeader.m_nPoseCount];
+unsigned char __padding8[poseBoneHeader.m_nNamesListOffset - FTell()];
+
+FSeek(poseBoneHeader.m_nNamesListOffset);
+
+Bone namesList[poseBoneHeader.m_nPoseCount] <optimize=false>;
+unsigned char __padding9[poseBoneHeader.m_nNamesEntryIndexArrayOffset - FTell()];
+
+FSeek(poseBoneHeader.m_nNamesEntryIndexArrayOffset);
+
+int namesEntryIndexArray[poseBoneHeader.m_nPoseCount];
+unsigned char __padding10[poseBoneHeader.m_nFaceBoneIndexArrayOffset - FTell()];
+
+FSeek(poseBoneHeader.m_nFaceBoneIndexArrayOffset);
+
+int faceBoneIndexArray[poseBoneHeader.m_nFaceBoneCount];
+unsigned char __padding11[boneRig.lPoseBoneHeader - FTell()];
