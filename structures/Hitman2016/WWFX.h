@@ -4,18 +4,18 @@
 
 #include "ZString.h"
 
-struct WaxFXEntry
+struct SWaxFXEntry
 {
-	unsigned int nHashedWavName;
-	ZString sWavLocale;
-	unsigned int nRuntimeAnimSetResourceIndex;
-	ZString sAnimationName;
-	unsigned int nTextResourceIndex;
-	unsigned int nLineId;
+	unsigned int m_nHashedWavName;
+	ZString m_sWavLocale;
+	unsigned int m_nRuntimeAnimSetResourceIndex;
+	ZString m_sAnimationName;
+	unsigned int m_nTextResourceIndex;
+	unsigned int m_nLineId;
 };
 
 struct SWavFXData
 {
-	int nEntryCount;
-	std::vector<WaxFXEntry> wavFXEntries;
+	int m_nEntryCount;
+	std::vector<WaxFXEntry> m_vWavFXEntries;
 };
