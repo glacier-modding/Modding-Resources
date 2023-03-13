@@ -33,13 +33,13 @@ typedef struct SVertexDataSubMeshHeader
 typedef struct SVertexDataSubMesh
 {
     SVertexDataSubMeshHeader m_sSubMeshHeader;
-    SColorRGBA colors[m_sSubMeshHeader.m_nVertices];
+    SColorRGBA m_aColors[m_sSubMeshHeader.m_nVertices];
 };
 
 typedef struct SVertexData
 {
     SVertexDataHeader m_sHeader;
-    SVertexDataSubMesh m_sVertexDataSubMeshes[m_sHeader.m_nSubMeshes] <optimize=false>;
+    SVertexDataSubMesh m_aVertexDataSubMeshes[m_sHeader.m_nSubMeshes] <optimize=false>;
 };
 
 SVertexData vertexData;
